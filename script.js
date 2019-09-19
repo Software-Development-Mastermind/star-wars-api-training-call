@@ -6,32 +6,24 @@ getDataBtn.onclick = function(event) {
   // make a GET request to Swapi.co
   axios.get('https://swapi.co/api/people/2')
   .then(function(response) {
-    const characterData = response.data;
+    const characterData = response.data; // { name: "Luke Skywalker", mass: 77 }
     console.log('characterData: ', characterData);    
 
     clearCurrentTable();
 
-    // create a new header
-    const headerRow = document.createElement('tr');
-
-    const properties = Object.keys(characterData) // [ "name", "mass", "height" ..etc ]
-
-    properties.forEach(propertyName => {
-      const headerCell = document.createElement('th');
-      const headerCellText = document.createTextNode(propertyName);
-      headerCell.appendChild(headerCellText);
-      headerRow.appendChild(headerCell);
-    });
+    const headerRow = createTableHeader(characterData);
 
     // create a new data row
     const dataRow = document.createElement('tr');
 
-    properties.forEach(propertyName => { // "name"
+    const properties = Object.keys(characterData); // [ "name", "mass" ];
+
+    properties.forEach(function(prop) {// "name"
       const dataCell = document.createElement('td');
-      const dataValue = characterData[propertyName]; // characterData.name
+      const dataValue = characterData[prop]; // characterData.name
       const dataCellText = document.createTextNode(dataValue); // correct value?
       dataCell.appendChild(dataCellText);
-      dataRow.appendChild(dataCell);
+      dataRow.appendChild(dataCell);      
     });
 
     const characterTable = document.getElementById('character-table');
@@ -47,4 +39,19 @@ function clearCurrentTable() {
   while(characterTable.firstChild) {
     characterTable.removeChild(characterTable.firstChild);
   }
+}
+
+function createTableHeader(characterData) {
+  const headerRow = document.createElement('tr');
+
+  const properties = Object.keys(characterData); // [ "name", "mass", "height" ..etc ]
+
+  properties.forEach(propertyName => {
+    const headerCell = document.createElement('th');
+    const headerCellText = document.createTextNode(propertyName);
+    headerCell.appendChild(headerCellText);
+    headerRow.appendChild(headerCell);
+  });
+
+  return headerRow;
 }
